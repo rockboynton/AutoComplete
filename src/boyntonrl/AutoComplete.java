@@ -14,7 +14,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.logging.Logger;
+
 public class AutoComplete extends Application {
+
+    public static final Logger LOGGER = Logger.getLogger(AutoComplete.class.getName());
 
     public static final int WIDTH = 550;
     public static final int HEIGHT = 600;
@@ -22,7 +26,7 @@ public class AutoComplete extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("autocomplete.fxml"));
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("AutoCompleter");
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         primaryStage.setResizable(false);
         primaryStage.show();

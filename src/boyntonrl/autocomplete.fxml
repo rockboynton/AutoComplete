@@ -16,15 +16,18 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#open" text="Open" />
+              <MenuItem mnemonicParsing="false" onAction="#open" text="Choose Dictionary" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Strategy">
             <items>
-                  <RadioMenuItem mnemonicParsing="false" onAction="#setStrategy" text="ArrayList Index" />
-                  <RadioMenuItem mnemonicParsing="false" text="ArrayList Iterator" />
-                  <RadioMenuItem mnemonicParsing="false" text="LinkedList Index" />
-                  <RadioMenuItem mnemonicParsing="false" text="LinkedList Iterator" />
+                  <RadioMenuItem fx:id="arrayListIndex" mnemonicParsing="false" onAction="#setArrayIndex" selected="true" text="ArrayList Index">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="strategies" />
+                     </toggleGroup></RadioMenuItem>
+                  <RadioMenuItem fx:id="arrayListIterator" mnemonicParsing="false" onAction="#setArrayIterator" text="ArrayList Iterator" toggleGroup="$strategies" />
+                  <RadioMenuItem fx:id="linkedListIndex" mnemonicParsing="false" onAction="#setLinkedIndex" text="LinkedList Index" toggleGroup="$strategies" />
+                  <RadioMenuItem fx:id="linkedListIterator" mnemonicParsing="false" onAction="#setLinkedIterator" text="LinkedList Iterator" toggleGroup="$strategies" />
             </items>
           </Menu>
         </menus>
@@ -48,12 +51,16 @@
          </VBox.margin>
       </Label>
       <ScrollPane prefHeight="447.0" prefWidth="530.0">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-        </content>
          <VBox.margin>
             <Insets left="10.0" right="10.0" />
          </VBox.margin>
+         <content>
+            <TextArea editable="false" prefHeight="440.0" prefWidth="538.0" promptText="No Matches">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TextArea>
+         </content>
       </ScrollPane>
       <GridPane>
         <columnConstraints>
