@@ -36,9 +36,11 @@ public class IndexAutoCompleter extends AbstractAutoCompleter implements AutoCom
         int prefixLength = prefix.length();
         for (int i = 0; i < words.size(); i++) {
             String word = words.get(i);
-            String wordPrefix = word.substring(0,prefixLength);
-            if (wordPrefix.equals(prefix)) {
-                foundWords.add(word);
+            if (word.length() >= prefixLength) {
+                String wordPrefix = word.substring(0, prefixLength);
+                if (wordPrefix.equals(prefix)) {
+                    foundWords.add(word);
+                }
             }
         }
         return foundWords;

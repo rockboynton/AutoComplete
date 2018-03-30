@@ -21,6 +21,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static javafx.scene.input.KeyCode.BACK_SPACE;
+
 /**
  * Controller class for the AutoComplete JavaFX application
  */
@@ -45,8 +47,9 @@ public class AutoCompleteController implements Initializable{
 
     @FXML
     private TextField searchBox;
+
     @FXML
-    private ScrollPane matches;
+    private TextArea matches;
 
     @FXML
     private Label timeRequired;
@@ -58,7 +61,14 @@ public class AutoCompleteController implements Initializable{
 
     @FXML
     private void search(KeyEvent e) {
-
+        words = autoCompleter.allThatBeginWith(searchBox.getText());
+        if (e.getCode() == BACK_SPACE) {
+            matches.setText("NO");
+        } else {
+            for (String word : words) {
+                matches.appendText(word + "\n");
+            }
+        }
     }
 
     @FXML
