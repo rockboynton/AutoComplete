@@ -10,6 +10,10 @@ package boyntonrl;
 
 import java.io.IOException;
 import java.util.List;
+/*
+ * DISCUSSION:
+ *
+ */
 
 /**
  * Defines the methods that all strategies of auto-completing must implement

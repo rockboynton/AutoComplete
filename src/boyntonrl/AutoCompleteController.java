@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 /**
  * Controller class for the AutoComplete JavaFX application
  */
-public class AutoCompleteController implements Initializable{
+public class AutoCompleteController implements Initializable {
 
     private static final Logger LOGGER = AutoComplete.LOGGER;
 
@@ -68,15 +68,15 @@ public class AutoCompleteController implements Initializable{
         matches.setScrollTop(matches.getScrollTop());
     }
 
-    private String formatTimeRequired(long nsTime) {
+    private static String formatTimeRequired(long nsTime) {
         String formattedTime;
-        if (nsTime > 10e9) { // if there are 9 or more digits, time will be measured in mm:ss:sss
+        if (nsTime > TimeUnit.SECONDS.toNanos(1)) {
             formattedTime = formatTimeInSeconds(nsTime);
-        } else if (nsTime > 10e6) { // if there are 6 or more digits, time will be measured in ms
+        } else if (nsTime > TimeUnit.MILLISECONDS.toNanos(1)) {
             formattedTime = formatTimeInMilliseconds(nsTime);
-        } else if (nsTime > 10e3){ // if there are 3 or more digits, time will be measured in us
+        } else if (nsTime > TimeUnit.MICROSECONDS.toNanos(1)){
             formattedTime = formatTimeInMicroseconds(nsTime);
-        } else { // if there are less than 3 digits, time will be measured in ns
+        } else {
             formattedTime = nsTime + " nanoseconds";
         }
         return formattedTime;

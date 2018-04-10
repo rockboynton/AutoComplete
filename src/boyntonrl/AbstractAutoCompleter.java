@@ -48,19 +48,22 @@ public abstract class AbstractAutoCompleter implements AutoCompleter {
         int dotIndex = path.toString().lastIndexOf(".");
         String ext = path.toString().substring(dotIndex);
         try(Scanner fileIn = new Scanner(file)) {
-            if (ext.equals(".csv")) {
-                while (fileIn.hasNextLine()) {
-                    String line = fileIn.nextLine();
-                    String[] fields = line.split(",");
-                    // add the second field in the csv file, which should be the domain name
-                    words.add(fields[1]);
-                }
-            } else if (ext.equals(".txt")) {
-                while (fileIn.hasNextLine()) {
-                    words.add(fileIn.nextLine());
-                }
-            } else {
-                throw new IOException("wrong file here");
+            switch (ext) {
+                case ".csv":
+                    while (fileIn.hasNextLine()) {
+                        String line = fileIn.nextLine();
+                        String[] fields = line.split(",");
+                        // add the second field in the csv file, which should be the domain name
+                        words.add(fields[1]);
+                    }
+                    break;
+                case ".txt":
+                    while (fileIn.hasNextLine()) {
+                        words.add(fileIn.nextLine());
+                    }
+                    break;
+                default:
+                    throw new IOException("wrong file here");
             }
         } finally {
             endTime = System.nanoTime();
