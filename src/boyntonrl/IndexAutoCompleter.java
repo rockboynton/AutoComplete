@@ -8,12 +8,8 @@
 
 package boyntonrl;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Stores the words in an ArrayList and uses index methods (e.g., get()) to navigate the list. for
@@ -25,12 +21,10 @@ public class IndexAutoCompleter extends AbstractAutoCompleter implements AutoCom
         super(words);
     }
 
-    public IndexAutoCompleter() {
-        super();
-    }
-
     @Override
     public List<String> allThatBeginWith(String prefix) {
+        long startTime = System.nanoTime();
+        long endTime;
         // LinkedList should be faster to add
         List<String> foundWords = new LinkedList<>();
         int prefixLength = prefix.length();
@@ -43,11 +37,8 @@ public class IndexAutoCompleter extends AbstractAutoCompleter implements AutoCom
                 }
             }
         }
+        endTime = System.nanoTime();
+        lastOpTime = endTime - startTime;
         return foundWords;
-    }
-
-    @Override
-    public double getLastOperationTime() {
-        return 0;
     }
 }

@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import static javafx.scene.input.KeyCode.BACK_SPACE;
@@ -31,23 +32,12 @@ public class AutoCompleteController implements Initializable{
     Logger LOGGER = AutoComplete.LOGGER;
 
     private AutoCompleter autoCompleter;
-    private List<String> words;
-
-
-    @FXML
-    private MenuItem open;
-    @FXML
-    private MenuItem arrayListIndex;
-    @FXML
-    private MenuItem arrayListIterator;
-    @FXML
-    private MenuItem linkedListIndex;
-    @FXML
-    private MenuItem linkedListIterator;
 
     @FXML
     private TextField searchBox;
 
+    @FXML
+    private ScrollPane scroll;
     @FXML
     private TextArea matches;
 
@@ -61,14 +51,43 @@ public class AutoCompleteController implements Initializable{
 
     @FXML
     private void search(KeyEvent e) {
-        words = autoCompleter.allThatBeginWith(searchBox.getText());
-        if (e.getCode() == BACK_SPACE) {
-            matches.setText("NO");
+        matches.setText("");
+        List<String> words = autoCompleter.allThatBeginWith(searchBox.getText());
+        String time = formatTimeRequired(autoCompleter.getLastOperationTime());
+//        for (String word : words) {
+//            matches.appendText(word + "\n");
+//        }
+        words.forEach(word -> matches.appendText(word + "\n"));
+        timeRequired.setText("Time Required: " + time);
+        matchesFound.setText("Matches Found: " + words.size());
+        matches.setScrollTop(matches.getScrollTop());
+    }
+
+    private String formatTimeRequired(long nsTime) {
+        String formattedTime;
+        if (nsTime > 10e9) {
+            formattedTime = formatTimeInSeconds(nsTime);
+        } else if (nsTime > 10e6) {
+            formattedTime = formatTimeInMilliseconds(nsTime);
         } else {
-            for (String word : words) {
-                matches.appendText(word + "\n");
-            }
+            formattedTime = nsTime + " nanoseconds";
         }
+        return formattedTime;
+    }
+
+    private String formatTimeInMilliseconds(long nsTime) {
+        return TimeUnit.NANOSECONDS.toMillis(nsTime) + " milliseconds";
+    }
+
+    private String formatTimeInSeconds(long nsTime) {
+        final long hr = TimeUnit.NANOSECONDS.toHours(nsTime);
+        final long min = TimeUnit.NANOSECONDS.toMinutes(nsTime - TimeUnit.HOURS.toNanos(hr));
+        final long sec = TimeUnit.NANOSECONDS.toSeconds(nsTime - TimeUnit.HOURS.toNanos(hr) -
+                TimeUnit.MINUTES.toNanos(min));
+        final long ms = TimeUnit.NANOSECONDS.toMillis(nsTime - TimeUnit.HOURS.toNanos(hr) -
+                TimeUnit.MINUTES.toNanos(min) - TimeUnit.SECONDS.toNanos(sec));
+        // hh:mm:ss.sss
+        return String.format("%02d:%02d:%02d.%03d", hr, min, sec, ms);
     }
 
     @FXML
@@ -108,8 +127,12 @@ public class AutoCompleteController implements Initializable{
                 showReadFailureAlert();
             }
         }
+        timeRequired.setText("Time Required: " + autoCompleter.getLastOperationTime());
     }
 
+    /**
+     * Sets the default strategy for autocompletion to using ArrayList and Indexing
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         autoCompleter = new IndexAutoCompleter(new ArrayList<>());

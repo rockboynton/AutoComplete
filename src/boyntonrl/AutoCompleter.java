@@ -36,5 +36,5 @@ public interface AutoCompleter {
      * allThatBeginsWith()
      * @return number of nanoseconds
      */
-    double getLastOperationTime();
+    long getLastOperationTime();
 }

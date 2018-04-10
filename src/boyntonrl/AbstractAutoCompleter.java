@@ -9,17 +9,20 @@ import java.util.Scanner;
 
 public abstract class AbstractAutoCompleter implements AutoCompleter{
 
-    protected List<String> words;
+    List<String> words;
+    long lastOpTime;
 
     public AbstractAutoCompleter(List<String> words) {
         this.words = words;
     }
 
-    public AbstractAutoCompleter(){
+    public AbstractAutoCompleter() {
     }
 
     @Override
     public void initialize(String fileName) throws IOException {
+        long startTime = System.nanoTime();
+        long endTime;
         Path path = Paths.get(fileName);
         File file = new File(path.toString());
         int dotIndex = path.toString().lastIndexOf(".");
@@ -39,6 +42,14 @@ public abstract class AbstractAutoCompleter implements AutoCompleter{
             } else {
                 throw new IOException("wrong file here");
             }
+        } finally {
+            endTime = System.nanoTime();
+            lastOpTime = endTime - startTime;
         }
+    }
+
+    @Override
+    public long getLastOperationTime() {
+        return lastOpTime;
     }
 }
