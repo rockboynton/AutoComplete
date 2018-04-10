@@ -1,3 +1,11 @@
+/*
+ * CS2852 - 021
+ * Spring 2018
+ * Lab 4 - AutoCompleter
+ * Name: Rock Boynton
+ * Created: 3/28/2018
+ */
+
 package boyntonrl;
 
 import java.io.File;
@@ -7,20 +15,31 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
-public abstract class AbstractAutoCompleter implements AutoCompleter{
+/**
+ * Abstract AutoCompleter defines the initialize and getLastOpTime methods for AutoCompleters
+ */
+public abstract class AbstractAutoCompleter implements AutoCompleter {
 
     List<String> words;
     long lastOpTime;
 
+    /**
+     * Constructor for AbstractAutoCompleter stores words in a list
+     * @see AutoCompleter
+     * @param words list of words
+     */
     public AbstractAutoCompleter(List<String> words) {
         this.words = words;
     }
 
-    public AbstractAutoCompleter() {
-    }
-
+    /**
+     * Load a file in the fill words list
+     * @param fileName name of dictionary file
+     * @throws IOException if something goes wrong
+     */
     @Override
     public void initialize(String fileName) throws IOException {
+        words.clear();
         long startTime = System.nanoTime();
         long endTime;
         Path path = Paths.get(fileName);

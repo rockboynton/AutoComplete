@@ -11,103 +11,117 @@ package boyntonrl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-
-import static javafx.scene.input.KeyCode.BACK_SPACE;
 
 /**
  * Controller class for the AutoComplete JavaFX application
  */
 public class AutoCompleteController implements Initializable{
 
-    Logger LOGGER = AutoComplete.LOGGER;
+    private static final Logger LOGGER = AutoComplete.LOGGER;
 
     private AutoCompleter autoCompleter;
+    private File dictionary;
 
     @FXML
     private TextField searchBox;
-
-    @FXML
-    private ScrollPane scroll;
     @FXML
     private TextArea matches;
-
     @FXML
     private Label timeRequired;
     @FXML
     private Label matchesFound;
 
     @FXML
-    private ToggleGroup strategies;
-
-    @FXML
     private void search(KeyEvent e) {
+        timeRequired.setText("Time Required: ");
         matches.setText("");
-        List<String> words = autoCompleter.allThatBeginWith(searchBox.getText());
+        List<String> words;
+        if (searchBox.getText().length() > 0) {
+            words = autoCompleter.allThatBeginWith(searchBox.getText());
+        } else {
+            words = autoCompleter.allThatBeginWith("");
+        }
         String time = formatTimeRequired(autoCompleter.getLastOperationTime());
-//        for (String word : words) {
-//            matches.appendText(word + "\n");
-//        }
-        words.forEach(word -> matches.appendText(word + "\n"));
-        timeRequired.setText("Time Required: " + time);
+        StringBuilder res = new StringBuilder();
+        for (String word : words) {
+            res.append(word).append("\n");
+        }
+        matches.setText(res.toString());
         matchesFound.setText("Matches Found: " + words.size());
+        timeRequired.setText("Time Required: " + time);
         matches.setScrollTop(matches.getScrollTop());
     }
 
     private String formatTimeRequired(long nsTime) {
         String formattedTime;
-        if (nsTime > 10e9) {
+        if (nsTime > 10e9) { // if there are 9 or more digits, time will be measured in mm:ss:sss
             formattedTime = formatTimeInSeconds(nsTime);
-        } else if (nsTime > 10e6) {
+        } else if (nsTime > 10e6) { // if there are 6 or more digits, time will be measured in ms
             formattedTime = formatTimeInMilliseconds(nsTime);
-        } else {
+        } else if (nsTime > 10e3){ // if there are 3 or more digits, time will be measured in us
+            formattedTime = formatTimeInMicroseconds(nsTime);
+        } else { // if there are less than 3 digits, time will be measured in ns
             formattedTime = nsTime + " nanoseconds";
         }
         return formattedTime;
     }
 
-    private String formatTimeInMilliseconds(long nsTime) {
+    private static String formatTimeInMicroseconds(long nsTime) {
+        return TimeUnit.NANOSECONDS.toMicros(nsTime) + " microseconds";
+    }
+
+    private static String formatTimeInMilliseconds(long nsTime) {
         return TimeUnit.NANOSECONDS.toMillis(nsTime) + " milliseconds";
     }
 
-    private String formatTimeInSeconds(long nsTime) {
-        final long hr = TimeUnit.NANOSECONDS.toHours(nsTime);
-        final long min = TimeUnit.NANOSECONDS.toMinutes(nsTime - TimeUnit.HOURS.toNanos(hr));
-        final long sec = TimeUnit.NANOSECONDS.toSeconds(nsTime - TimeUnit.HOURS.toNanos(hr) -
+    private static String formatTimeInSeconds(long nsTime) {
+        final long min = TimeUnit.NANOSECONDS.toMinutes(nsTime);
+        final long sec = TimeUnit.NANOSECONDS.toSeconds(nsTime -
                 TimeUnit.MINUTES.toNanos(min));
-        final long ms = TimeUnit.NANOSECONDS.toMillis(nsTime - TimeUnit.HOURS.toNanos(hr) -
+        final long ms = TimeUnit.NANOSECONDS.toMillis(nsTime -
                 TimeUnit.MINUTES.toNanos(min) - TimeUnit.SECONDS.toNanos(sec));
-        // hh:mm:ss.sss
-        return String.format("%02d:%02d:%02d.%03d", hr, min, sec, ms);
+        // mm:ss.sss
+        return String.format("%02d:%02d.%03d", min, sec, ms);
     }
 
     @FXML
     private void setArrayIndex(ActionEvent e) {
         autoCompleter = new IndexAutoCompleter(new ArrayList<>());
+        initializeAutoCompleter(dictionary);
     }
 
     @FXML
     private void setArrayIterator(ActionEvent e) {
         autoCompleter = new IteratorAutoCompleter(new ArrayList<>());
+        initializeAutoCompleter(dictionary);
     }
 
     @FXML
     private void setLinkedIndex(ActionEvent e) {
         autoCompleter = new IndexAutoCompleter(new LinkedList<>());
+        initializeAutoCompleter(dictionary);
     }
 
     @FXML
     private void setLinkedIterator(ActionEvent e) {
         autoCompleter = new IteratorAutoCompleter(new LinkedList<>());
+        initializeAutoCompleter(dictionary);
     }
 
     @FXML
@@ -117,25 +131,38 @@ public class AutoCompleteController implements Initializable{
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Dictionary Files", "*.txt",
                         "*.csv"));
-        File file = fileChooser.showOpenDialog(null);
+        dictionary = fileChooser.showOpenDialog(null);
+        initializeAutoCompleter(dictionary);
+        timeRequired.setText("Time Required: " + formatTimeRequired(
+                autoCompleter.getLastOperationTime()));
+        searchBox.setDisable(false);
+        searchBox.setText("");
+        matches.setText("");
+        searchBox.setPromptText("What would you like to search?");
+    }
+
+    private void initializeAutoCompleter(File file) {
         if (file != null) {
             try {
-                autoCompleter.initialize(file.getPath());
+                autoCompleter.initialize(dictionary.getPath());
                 LOGGER.info("Successfully loaded dictionary");
             } catch (IOException ioe) {
                 LOGGER.severe("File failed to open");
                 showReadFailureAlert();
             }
         }
-        timeRequired.setText("Time Required: " + autoCompleter.getLastOperationTime());
     }
 
     /**
      * Sets the default strategy for autocompletion to using ArrayList and Indexing
+     * @param location URL location
+     * @param resources ResourceBundle
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         autoCompleter = new IndexAutoCompleter(new ArrayList<>());
+        searchBox.setText("Please select a dictionary file");
+        searchBox.setDisable(true);
     }
 
     private static void showReadFailureAlert() {

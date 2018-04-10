@@ -17,10 +17,21 @@ import java.util.List;
  */
 public class IndexAutoCompleter extends AbstractAutoCompleter implements AutoCompleter {
 
-    public IndexAutoCompleter (List<String> words) {
+    /**
+     * Constructor for an IndexAutoCompleter
+     * @see AbstractAutoCompleter
+     * @param words list of words
+     */
+    public IndexAutoCompleter(List<String> words) {
         super(words);
     }
 
+    /**
+     * Method that makes use of index-based methods to search for all the words that begin with
+     * the specified prefix.
+     * @param prefix prefix to look for
+     * @return list of all words that begin with prefix
+     */
     @Override
     public List<String> allThatBeginWith(String prefix) {
         long startTime = System.nanoTime();
@@ -28,12 +39,14 @@ public class IndexAutoCompleter extends AbstractAutoCompleter implements AutoCom
         // LinkedList should be faster to add
         List<String> foundWords = new LinkedList<>();
         int prefixLength = prefix.length();
-        for (int i = 0; i < words.size(); i++) {
-            String word = words.get(i);
-            if (word.length() >= prefixLength) {
-                String wordPrefix = word.substring(0, prefixLength);
-                if (wordPrefix.equals(prefix)) {
-                    foundWords.add(word);
+        if (prefixLength > 0) {
+            for (int i = 0; i < words.size(); i++) {
+                String word = words.get(i);
+                if (word.length() >= prefixLength) {
+                    String wordPrefix = word.substring(0, prefixLength);
+                    if (wordPrefix.equals(prefix)) {
+                        foundWords.add(word);
+                    }
                 }
             }
         }
