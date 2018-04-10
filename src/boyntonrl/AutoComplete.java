@@ -37,6 +37,7 @@ public class AutoComplete extends Application {
      * Width of Stage
      */
     public static final int WIDTH = 550;
+
     /**
      * Height of Stage
      */

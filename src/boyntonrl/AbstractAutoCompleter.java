@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Abstract AutoCompleter defines the initialize and getLastOpTime methods for AutoCompleters
+ * Abstract AutoCompleter defines the initialize and getLastOpTime methods for implementations of
+ * the AutoCompleter interface.
  */
 public abstract class AbstractAutoCompleter implements AutoCompleter {
 

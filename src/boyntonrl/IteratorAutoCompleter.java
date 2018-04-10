@@ -26,10 +26,10 @@ public class IteratorAutoCompleter extends AbstractAutoCompleter implements Auto
     }
 
     /**
-     * Method that makes use of an iterator to search for all the words that begin with the
-     * specified prefix
+     * Returns a list of all prefix matches in the dictionary, a.k.a., all entries in the
+     * dictionary that begin with prefix. Utilizes an iterator.
      * @param prefix prefix to look for
-     * @return list of all words that begin with prefix
+     * @return list containing words in dictionary that match the prefix
      */
     @Override
     public List<String> allThatBeginWith(String prefix) {
