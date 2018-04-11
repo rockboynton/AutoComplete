@@ -12,7 +12,15 @@ import java.io.IOException;
 import java.util.List;
 /*
  * DISCUSSION:
- *
+ *      To compare the performance of the different solutions. I tried testing them all using the
+ * .csv file, as I thought having the larger data set assured the greatest difference in search
+ * time/efficiency revealing the asymptotic time complexity differences between using
+ * ArrayList/LinkedList and indexing/iterators.
+ *      However, i found that using the .csv file with LinkedList indexing made the program
+ * unresponsive even after waiting several minutes, as it took so much longer to search than the
+ * other methods. I then tried it with the second-largest data set, the words.txt file and while
+ * all of the other strategies took about the same time on average to complete, the LinkedList
+ * index was by far the slowest (by about 4 orders of magnitude).
  */
 
 /**
