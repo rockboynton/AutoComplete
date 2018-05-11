@@ -125,6 +125,18 @@ public class AutoCompleteController implements Initializable {
     }
 
     @FXML
+    private void setTrieMap(ActionEvent e) {
+        autoCompleter = new TrieMapAutoCompleter(new Trie());
+        initializeAutoCompleter(dictionary);
+    }
+
+    @FXML
+    private void setArrayListBinarySearch(ActionEvent e) {
+        autoCompleter = new IteratorAutoCompleter(new LinkedList<>());
+        initializeAutoCompleter(dictionary);
+    }
+
+    @FXML
     private void open(ActionEvent e) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");

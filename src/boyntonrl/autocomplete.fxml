@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="boyntonrl.AutoCompleteController">
    <children>
@@ -25,8 +23,8 @@
                   <RadioMenuItem fx:id="arrayListIterator" mnemonicParsing="false" onAction="#setArrayIterator" text="ArrayList Iterator" toggleGroup="$strategies" />
                   <RadioMenuItem fx:id="linkedListIndex" mnemonicParsing="false" onAction="#setLinkedIndex" text="LinkedList Index" toggleGroup="$strategies" />
                   <RadioMenuItem fx:id="linkedListIterator" mnemonicParsing="false" onAction="#setLinkedIterator" text="LinkedList Iterator" toggleGroup="$strategies" />
-                  <RadioMenuItem fx:id="treeMap" mnemonicParsing="false" onAction="#setTreeMap" text="Trie Map" toggleGroup="$strategies" />
-                  <RadioMenuItem fx:id="arrayListBinarySearch" mnemonicParsing="false" onAction="#setarrayListBinarySearch" text="ArrayList Binary Search" toggleGroup="$strategies" />
+                  <RadioMenuItem fx:id="treeMap" mnemonicParsing="false" onAction="#setTrieMap" text="Trie Map" toggleGroup="$strategies" />
+                  <RadioMenuItem fx:id="arrayListBinarySearch" mnemonicParsing="false" onAction="#setArrayListBinarySearch" text="ArrayList Binary Search" toggleGroup="$strategies" />
             </items>
           </Menu>
         </menus>
