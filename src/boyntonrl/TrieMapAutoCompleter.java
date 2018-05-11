@@ -88,7 +88,7 @@ public class TrieMapAutoCompleter implements AutoCompleter {
         long endTime;
         List<String> foundWords = new ArrayList<>();
         if (prefix.length() > 0) {
-            foundWords = words.allThatBeginsWith(prefix);
+            foundWords = words.allThatBeginsWith(prefix.replaceAll("[^A-Za-z]",""));
         }
         endTime = System.nanoTime();
         lastOpTime = endTime - startTime;

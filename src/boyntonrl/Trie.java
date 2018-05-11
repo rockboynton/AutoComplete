@@ -49,11 +49,13 @@ public class Trie {
      * @param word word to be added to the Trie
      */
     public void put(String word) {
+        String wordAlphabetical = word.toLowerCase().replaceAll("[^A-Za-z]","");
+//        String wordAlphabetical = word;
         Node node = this.root;
         char c;
         int index;
-        for (int i = 0; i < word.length(); i++) {
-            c = word.charAt(i);
+        for (int i = 0; i < wordAlphabetical.length(); i++) {
+            c = wordAlphabetical.charAt(i);
             index = c - 'a';
             if (node.kids[index] == null) {
                 Node temp = new Node(word.substring(0, i + 1));
@@ -87,44 +89,47 @@ public class Trie {
     }
 
     // RECURSIVE VERSION... NOT WORKING
-//    /**
-//     * Finds and returns all words that begin with the given prefix in the Trie
-//     * @param prefix to search for words that begin with
-//     * @return
-//     */
-//    public List<String> allThatBeginsWith(String prefix) {
-//        Node root = searchNode(prefix);
-//        return allThatBeginsWith(prefix, root.kids);
-//    }
-//
-//    private List<String> allThatBeginsWith(String prefix, Node[] kids) {
-//        List<String> foundWords = new ArrayList<>();
-//        if (kids.length > 0) {
-//            if (kids[0] != null && kids[0].isWord) {
-//                foundWords.add(kids[0].letters);
-//            }
-//            foundWords.addAll(allThatBeginsWith(prefix, Arrays.
-//                    copyOfRange(kids, 1, kids.length)));
-//        }
-//        return foundWords;
-//    }
-
     /**
      * Finds and returns all words that begin with the given prefix in the Trie
      * @param prefix to search for words that begin with
      * @return
      */
     public List<String> allThatBeginsWith(String prefix) {
-        List<String> words = new ArrayList<>();
         Node root = searchNode(prefix);
-        for (Node node : root.kids) {
-            Node temp = node;
-            while (temp.isWord) {
+        return allThatBeginsWith(root);
+    }
 
+    private List<String> allThatBeginsWith(Node root) {
+        List<String> foundWords = new ArrayList<>();
+        if (root != null) {
+            if (root.isWord) {
+                foundWords.add(root.letters);
+            }
+            for (Node node : root.kids) {
+                if (node != null) {
+                    foundWords.addAll(allThatBeginsWith(node));
+                }
             }
         }
-        return words;
+        return foundWords;
     }
+    // NON RECURSIVE NOT WORKING
+//    /**
+//     * Finds and returns all words that begin with the given prefix in the Trie
+//     * @param prefix to search for words that begin with
+//     * @return
+//     */
+//    public List<String> allThatBeginsWith(String prefix) {
+//        List<String> words = new ArrayList<>();
+//        Node root = searchNode(prefix);
+//        for (Node node : root.kids) {
+//            Node temp = node;
+//            while (temp.isWord) {
+//                words.add(temp.letters);
+//            }
+//        }
+//        return words;
+//    }
 
 
 

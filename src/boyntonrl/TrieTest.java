@@ -8,13 +8,27 @@ import static org.junit.Assert.*;
 
 public class TrieTest {
 
+    Trie trie = new Trie();
+
     @Before
     public void setUp() throws Exception {
-        Trie tree = new Trie();
+        trie = new Trie();
+        trie.put("to");
+        trie.put("to");
+        trie.put("a");
+        trie.put("tea");
+        trie.put("ted");
+        trie.put("in");
+        trie.put("i");
+        trie.put("to");
+        trie.put("inn");
+        trie.put("inning");
+        trie.put("ten");
     }
 
     @After
     public void tearDown() throws Exception {
+        trie = null;
     }
 
     @Test
@@ -24,29 +38,22 @@ public class TrieTest {
 
     @Test
     public void search() {
+        assertTrue(trie.search("i"));
+        assertFalse(trie.search("inni"));
     }
 
     @Test
     public void beginsWith() {
+        assertTrue(trie.beginsWith("inni"));
     }
 
     @Test
     public void allThatBeginsWith() {
-        Trie trie = new Trie();
-        trie.put("to");
-        trie.put("a");
-        trie.put("tea");
-        trie.put("ted");
-        trie.put("in");
-        trie.put("i");
-        trie.put("inn");
-        trie.put("inning");
-
-        trie.put("ten");
-        assertEquals("to", trie.allThatBeginsWith("t").get(0));
-        assertEquals(3, trie.allThatBeginsWith("i").size());
-        assertNotEquals("te", trie.allThatBeginsWith("t").get(1));
-        assertEquals("tea", trie.allThatBeginsWith("t").get(1));
+        assertEquals("[tea, ted, ten, to]", trie.allThatBeginsWith("t").toString());
+        assertEquals("[i, in, inn, inning]", trie.allThatBeginsWith("i").toString());
+        assertNotEquals("[bla]", trie.allThatBeginsWith("b"));
+        System.out.println(trie.allThatBeginsWith("t"));
+        assertEquals("[a]", trie.allThatBeginsWith("a").toString());
     }
 
     @Test
