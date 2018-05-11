@@ -4,6 +4,7 @@
  * Lab 4 - AutoCompleter
  * Name: Rock Boynton
  * Created: 3/28/2018
+ * Modified: 5/10/18
  */
 
 package boyntonrl;
