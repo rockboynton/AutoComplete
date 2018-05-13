@@ -132,7 +132,7 @@ public class AutoCompleteController implements Initializable {
 
     @FXML
     private void setArrayListBinarySearch(ActionEvent e) {
-        autoCompleter = new IteratorAutoCompleter(new LinkedList<>());
+        autoCompleter = new ArrayListBinarySearchAutoCompleter(new ArrayList<>());
         initializeAutoCompleter(dictionary);
     }
 

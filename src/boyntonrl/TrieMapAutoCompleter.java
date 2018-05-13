@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Stores the words in an Trie and uses uses it to find all the words beginning with a prefix.
+ * Stores the words in a Trie and uses it to find all the words beginning with a prefix.
  */
 public class TrieMapAutoCompleter implements AutoCompleter {
 
@@ -47,6 +47,7 @@ public class TrieMapAutoCompleter implements AutoCompleter {
         File file = new File(path.toString());
         int dotIndex = path.toString().lastIndexOf(".");
         String ext = path.toString().substring(dotIndex);
+        int addCount = 0;
         try(Scanner fileIn = new Scanner(file)) {
             switch (ext) {
                 case ".csv":
@@ -55,11 +56,15 @@ public class TrieMapAutoCompleter implements AutoCompleter {
                         String[] fields = line.split(",");
                         // add the second field in the csv file, which should be the domain name
                         words.put(fields[1]);
+                        addCount++;
+                        System.out.println(addCount);
                     }
                     break;
                 case ".txt":
                     while (fileIn.hasNextLine()) {
                         words.put(fileIn.nextLine());
+                        addCount++;
+                        System.out.println(addCount);
                     }
                     break;
                 default:
@@ -69,6 +74,7 @@ public class TrieMapAutoCompleter implements AutoCompleter {
             endTime = System.nanoTime();
             lastOpTime = endTime - startTime;
         }
+
     }
 
     @Override
@@ -88,7 +94,7 @@ public class TrieMapAutoCompleter implements AutoCompleter {
         long endTime;
         List<String> foundWords = new ArrayList<>();
         if (prefix.length() > 0) {
-            foundWords = words.allThatBeginsWith(prefix.replaceAll("[^A-Za-z]",""));
+            foundWords = words.allThatBeginsWith(prefix);
         }
         endTime = System.nanoTime();
         lastOpTime = endTime - startTime;

@@ -9,7 +9,6 @@
 package boyntonrl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,9 +18,17 @@ public class Trie {
 
     /**
      * Number of possible characters each node can have as children:
-     * alphabetical letters(26) + "/" , "." and ":" (for URLs).
+     * alphabetical letters(26), numbers(10), dots, dashes, and slashes
      */
-    public static final int NUM_POSSIBLE_CHARACTERS = 29;
+    public static final int NUM_POSSIBLE_CHARACTERS = 39;
+    /**
+     * Offset between the ASCII value 'a' and ''
+     */
+    public static final int ASCII_OFFSET = 52;
+    /**
+     * Number of digits 0-10, and dots, dashes and slashes
+     */
+    public static final int NUMBER_OF_EXTRA_CHARACTERS = 13;
 
     private static class Node {
         Node[] kids;
@@ -49,14 +56,18 @@ public class Trie {
      * @param word word to be added to the Trie
      */
     public void put(String word) {
-        String wordAlphabetical = word.toLowerCase().replaceAll("[^A-Za-z]","");
-//        String wordAlphabetical = word;
         Node node = this.root;
         char c;
         int index;
-        for (int i = 0; i < wordAlphabetical.length(); i++) {
-            c = wordAlphabetical.charAt(i);
-            index = c - 'a';
+        for (int i = 0; i < word.length(); i++) {
+            c = word.charAt(i);
+            if (Character.isDigit(c) || c == '-' || c == '.' || c == '/') {
+                index = c - 'a' + ASCII_OFFSET;
+            } else if (Character.isAlphabetic(c)) {
+                index = c - 'a' + NUMBER_OF_EXTRA_CHARACTERS;
+            } else {
+                index = 0;
+            }
             if (node.kids[index] == null) {
                 Node temp = new Node(word.substring(0, i + 1));
                 node.kids[index] = temp;
@@ -66,6 +77,8 @@ public class Trie {
             }
         }
         node.isWord = true;
+//        System.out.println("Free memory: " + Runtime.getRuntime().freeMemory() + ", Total Memory:" +
+//                    Runtime.getRuntime().totalMemory());
     }
 
     /**
@@ -132,21 +145,16 @@ public class Trie {
 //    }
 
 
+    public List<String> getKids() {
+        return getKids(root);
+    }
 
     private List<String> getKids(Node root) {
         List<String> kids = new ArrayList<>();
-        Node node = root;
-        Node kid;
         char c;
-        for (int i = 0; node != null && i < root.kids.length; i++) {
-            kid = node.kids[i];
-            if (kid != null) {
-                if (kid.isWord) {
-                    kids.add(kid.letters);
-                }
-                node = node.kids[i];
-            } else {
-                node = null;
+        for (int i = 0; i < root.kids.length; i++) {
+            if (root.kids[i] != null) {
+                kids.add(root.kids[i].letters);
             }
         }
         return kids; // FIXME
@@ -165,7 +173,11 @@ public class Trie {
         int index;
         for (int i = 0; node != null && i < word.length(); i++) {
             c = word.charAt(i);
-            index = c - 'a';
+            if (Character.isDigit(c) || c == '-' || c == '.' || c == '/') {
+                index = c - 'a' + ASCII_OFFSET;
+            } else {
+                index = c - 'a' + NUMBER_OF_EXTRA_CHARACTERS;
+            }
             if (node.kids[index] != null) {
                 node = node.kids[index];
             } else {
