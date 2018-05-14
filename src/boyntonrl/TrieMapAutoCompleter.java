@@ -8,11 +8,15 @@
 
 package boyntonrl;
 
+import com.sun.deploy.util.StringUtils;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,7 +25,7 @@ import java.util.Scanner;
  */
 public class TrieMapAutoCompleter implements AutoCompleter {
 
-    private Trie words;
+    private TrieHash words;
     private long lastOpTime;
 
     /**
@@ -29,7 +33,7 @@ public class TrieMapAutoCompleter implements AutoCompleter {
      * @see AbstractAutoCompleter
      * @param words list of words
      */
-    public TrieMapAutoCompleter(Trie words) {
+    public TrieMapAutoCompleter(TrieHash words) {
         this.words = words;
     }
 
@@ -47,7 +51,6 @@ public class TrieMapAutoCompleter implements AutoCompleter {
         File file = new File(path.toString());
         int dotIndex = path.toString().lastIndexOf(".");
         String ext = path.toString().substring(dotIndex);
-        int addCount = 0;
         try(Scanner fileIn = new Scanner(file)) {
             switch (ext) {
                 case ".csv":
@@ -56,15 +59,11 @@ public class TrieMapAutoCompleter implements AutoCompleter {
                         String[] fields = line.split(",");
                         // add the second field in the csv file, which should be the domain name
                         words.put(fields[1]);
-                        addCount++;
-                        System.out.println(addCount);
                     }
                     break;
                 case ".txt":
                     while (fileIn.hasNextLine()) {
                         words.put(fileIn.nextLine());
-                        addCount++;
-                        System.out.println(addCount);
                     }
                     break;
                 default:
@@ -74,7 +73,6 @@ public class TrieMapAutoCompleter implements AutoCompleter {
             endTime = System.nanoTime();
             lastOpTime = endTime - startTime;
         }
-
     }
 
     @Override

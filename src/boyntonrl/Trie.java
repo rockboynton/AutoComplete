@@ -22,7 +22,7 @@ public class Trie {
      */
     public static final int NUM_POSSIBLE_CHARACTERS = 39;
     /**
-     * Offset between the ASCII value 'a' and ''
+     * Offset between the ASCII value 'a' and '.'
      */
     public static final int ASCII_OFFSET = 52;
     /**
