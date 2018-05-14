@@ -25,7 +25,7 @@ import java.util.Scanner;
  */
 public class TrieMapAutoCompleter implements AutoCompleter {
 
-    private TrieHash words;
+    private Trie words;
     private long lastOpTime;
 
     /**
@@ -33,7 +33,7 @@ public class TrieMapAutoCompleter implements AutoCompleter {
      * @see AbstractAutoCompleter
      * @param words list of words
      */
-    public TrieMapAutoCompleter(TrieHash words) {
+    public TrieMapAutoCompleter(Trie words) {
         this.words = words;
     }
 

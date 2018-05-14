@@ -109,18 +109,18 @@ public class Trie {
      */
     public List<String> allThatBeginsWith(String prefix) {
         Node root = searchNode(prefix);
-        return allThatBeginsWith(root);
+        return allThatBeginsWith(root, new ArrayList<>());
     }
 
-    private List<String> allThatBeginsWith(Node root) {
-        List<String> foundWords = new ArrayList<>();
+    private List<String> allThatBeginsWith(Node root, List<String> foundWords) {
+//        List<String> foundWords = new ArrayList<>();
         if (root != null) {
             if (root.isWord) {
                 foundWords.add(root.letters);
             }
             for (Node node : root.kids) {
                 if (node != null) {
-                    foundWords.addAll(allThatBeginsWith(node));
+                    allThatBeginsWith(node, foundWords);
                 }
             }
         }

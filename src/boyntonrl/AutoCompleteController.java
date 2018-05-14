@@ -126,7 +126,7 @@ public class AutoCompleteController implements Initializable {
 
     @FXML
     private void setTrieMap(ActionEvent e) {
-        autoCompleter = new TrieMapAutoCompleter(new TrieHash());
+        autoCompleter = new TrieMapAutoCompleter(new Trie());
         initializeAutoCompleter(dictionary);
     }
 

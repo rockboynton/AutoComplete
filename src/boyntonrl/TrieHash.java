@@ -92,11 +92,11 @@ public class TrieHash {
      */
     public List<String> allThatBeginsWith(String prefix) {
         Node root = searchNode(prefix);
-        return allThatBeginsWith(root, new StringBuilder());
+        return allThatBeginsWith(root, new StringBuilder(), new ArrayList<>());
     }
 
-    private List<String> allThatBeginsWith(Node root, StringBuilder sb) {
-        List<String> foundWords = new ArrayList<>();
+    private List<String> allThatBeginsWith(Node root, StringBuilder sb, List<String> foundWords) {
+//        List<String> foundWords = new ArrayList<>();
         if (root != null) {
             StringBuilder localSb;
             if (root.isWord) {
@@ -107,8 +107,7 @@ public class TrieHash {
             for (Node node : root.kids.values()) {
                 localSb = new StringBuilder(sb);
                 localSb.append(root.c);
-                foundWords.addAll(allThatBeginsWith(node, localSb));
-            }
+                allThatBeginsWith(node, localSb, foundWords); }
         }
         return foundWords;
     }
